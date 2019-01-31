@@ -1,11 +1,10 @@
       *----------------------------------------------------------------*
       * Author: JOSE CAETANO BEUKER
-      * Date: 28.01.2019
-      * Purpose: TR03 FLUX - Capítulo 03 - Aula 03
+      * Date: 30.01.2019
+      * Purpose: TR03 FLUX - Capítulo 03 - Aula 05
       * Description:
-      *    Desenvolver um programa utilizando a instrução PERFORM, com
-      *    as seguintes características:
-
+      *    Desenvolver um programa utilizando a instrução PERFORM ...
+      *    UNTIL .., com as seguintes características:
       *    - criar três variáveis numéricas com valor inicial nulo na
       *     WORKING-STORAGE SECTION
       *    - solicitar inserção de dados na console
@@ -15,11 +14,10 @@
       *    - receber os dados inseridos na console
       *    - apresentar conteúdo das variáveis na console do computador
       *     em ordem ascendente
-
       *----------------------------------------------------------------*
        IDENTIFICATION                  DIVISION.
       *----------------------------------------------------------------*
-       PROGRAM-ID.                     PR13TA01.
+       PROGRAM-ID.                     PR15TA01.
       *----------------------------------------------------------------*
 
       *----------------------------------------------------------------*
@@ -39,8 +37,8 @@
       *----------------------------------------------------------------*
        WORKING-STORAGE                 SECTION.
       *----------------------------------------------------------------*
-       77  CTE-PROG                  PIC X(18) VALUE '*** PR13TA01 ***'.
-       77  CTE-VERS                  PIC X(06) VALUE          'VRS001'.
+       77  NOME-PROGRAMA               PIC X(18) VALUE '** PR15TA01 **'.
+       77  VERSAO-PROGRAMA             PIC X(06) VALUE         'VRS001'.
 
        01  GRP-AUXILIARES.
            03  OPE01                   PIC S9(05) COMP-5   VALUE ZEROS.
@@ -49,7 +47,7 @@
            03  AUX01                   PIC S9(05) COMP-5   VALUE ZEROS.
 
       *----------------------------------------------------------------*
-       PROCEDURE DIVISION.
+       PROCEDURE                       DIVISION.
       *----------------------------------------------------------------*
 
            PERFORM INICIA
@@ -61,73 +59,78 @@
            .
 
       *----------------------------------------------------------------*
-           INICIA.
+           INICIA                      SECTION.
       *----------------------------------------------------------------*
-           DISPLAY CTE-PROG 'INICIA'
+           DISPLAY NOME-PROGRAMA 'INICIA'
 
-           DISPLAY "VALOR DE OPE01" UPON CONSOLE.
-           ACCEPT   OPE01           FROM CONSOLE.
+           PERFORM UNTIL OPE01         NOT EQUAL 0
+             DISPLAY "DIGITE UM VALOR DIFERENTE DE ZERO PARA OPE01: "
+                                       UPON CONSOLE
+             ACCEPT   OPE01            FROM CONSOLE
+           END-PERFORM
 
-           DISPLAY "VALOR DE OPE02" UPON CONSOLE.
-           ACCEPT   OPE02           FROM CONSOLE.
 
-           DISPLAY "VALOR DE OPE03" UPON CONSOLE.
-           ACCEPT   OPE03           FROM CONSOLE.
+           PERFORM UNTIL OPE02         NOT EQUAL 0
+             DISPLAY "DIGITE UM VALOR DIFERENTE DE ZERO PARA OPE02: "
+                                       UPON CONSOLE
+             ACCEPT   OPE02            FROM CONSOLE
+           END-PERFORM
 
-           IF  OPE01 = 0
-               DISPLAY "OPE01 INVÁLIDO, INSERIR VALORES NOVAMENTE"
-               UPON CONSOLE
-               PERFORM INICIA
+
+           PERFORM UNTIL OPE03         NOT EQUAL 0
+             DISPLAY "DIGITE UM VALOR DIFERENTE DE ZERO PARA OPE03: "
+                                       UPON CONSOLE
+             ACCEPT   OPE03            FROM CONSOLE
+           END-PERFORM
+
+           .
+
+           EXIT.
+
+      *----------------------------------------------------------------*
+           PROCESSA                    SECTION.
+      *----------------------------------------------------------------*
+
+
+           PERFORM CALCULA UNTIL OPE03 >= OPE02 AND OPE02 >= OPE01
+
+           .
+
+           EXIT.
+
+      *----------------------------------------------------------------*
+           CALCULA                     SECTION.
+      *----------------------------------------------------------------*
+
+           IF  OPE01                   > OPE02
+               MOVE OPE01              TO AUX01
+               MOVE OPE02              TO OPE01
+               MOVE AUX01              TO OPE02
            END-IF
 
-           IF  OPE02 = 0
-               DISPLAY "OPE02 INVÁLIDO, INSERIR VALORES NOVAMENTE"
-               UPON CONSOLE
-               PERFORM INICIA
-           END-IF
-
-           IF  OPE03 = 0
-               DISPLAY "OPE03 INVÁLIDO, INSERIR VALORES NOVAMENTE"
-               UPON CONSOLE
-               PERFORM INICIA
+           IF  OPE02                   > OPE03
+               MOVE OPE02              TO AUX01
+               MOVE OPE03              TO OPE02
+               MOVE AUX01              TO OPE03
            END-IF
 
            .
 
-      *----------------------------------------------------------------*
-           PROCESSA.
-      *----------------------------------------------------------------*
-           MOVE 0 TO AUX01
-
-           IF  OPE01 > OPE02
-               MOVE OPE01 TO AUX01
-               MOVE OPE02 TO OPE01
-               MOVE AUX01 TO OPE02
-           END-IF
-
-           IF  OPE02 > OPE03
-               MOVE OPE02 TO AUX01
-               MOVE OPE03 TO OPE02
-               MOVE AUX01 TO OPE03
-           END-IF
-
-           IF  AUX01 NOT EQUAL 0
-               PERFORM PROCESSA
-           END-IF
-
-           .
+           EXIT.
 
       *----------------------------------------------------------------*
-           FINALIZA.
+           FINALIZA                    SECTION.
       *----------------------------------------------------------------*
+
            DISPLAY "OPE01: " OPE01
            DISPLAY "OPE02: " OPE02
            DISPLAY "OPE03: " OPE03
 
-           DISPLAY CTE-PROG 'FINALIZA'
+           DISPLAY NOME-PROGRAMA 'FINALIZA'
 
            STOP RUN
 
            .
 
+           EXIT.
       *----------------------------------------------------------------*

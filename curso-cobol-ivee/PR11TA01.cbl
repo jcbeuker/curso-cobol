@@ -2,6 +2,20 @@
       * Author: JOSE CAETANO BEUKER
       * Date: 22.01.2019
       * Purpose: AMOSTRA PRATICA 11 TAREFA 01
+      * Description:
+      *    Desenvolver um programa com as seguintes características:
+
+      *    - criar duas variáveis numéricas com valor inicial nulo na
+      *     WORKING-STORAGE SECTION
+      *    - solicitar inserção de dados na console
+      *    - as variáveis deverão ter valores diferentes entre si
+      *    - em sendo inserido o valor já existente, solicitar
+      *     novamente a inserção
+      *    - se o valor continuar já existindo encerrar o programa
+      *    - receber os dados inseridos na console
+      *    - apresentar conteúdo das variáveis na console do computador
+      *     em ordem ascendente
+
       *----------------------------------------------------------------*
        IDENTIFICATION                  DIVISION.
       *----------------------------------------------------------------*

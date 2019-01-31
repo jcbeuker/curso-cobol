@@ -2,6 +2,20 @@
       * Author: JOSE CAETANO BEUKER
       * Date: 28.01.2019
       * Purpose: TR03 FLUX - Capítulo 03 - Aula 04
+      * Description:
+      *    Desenvolver um programa utilizando a instrução PERFORM, com
+      *    as seguintes características:
+
+      *    - estruturar a PROCEDURE DIVISION em SECTIONS
+      *    - criar três variáveis numéricas com valor inicial nulo na
+      *     WORKING-STORAGE SECTION
+      *    - solicitar inserção de dados na console
+      *    - as variáveis deverão ter valores diferentes de zero
+      *    - em sendo inserido o valor zero em qualquer das variáveis,
+      *     solicitar novamente a inserção
+      *    - receber os dados inseridos na console
+      *    - apresentar conteúdo das variáveis na console do computador
+      *     em ordem ascendente
       *----------------------------------------------------------------*
        IDENTIFICATION                  DIVISION.
       *----------------------------------------------------------------*
