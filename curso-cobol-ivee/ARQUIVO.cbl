@@ -1,11 +1,11 @@
       *----------------------------------------------------------------*
       * Author: JOSE CAETANO BEUKER
-      * Date: 28.01.2019
-      * Purpose: TR03 FLUX - Capítulo 03 - Aula 04
+      * Date: 29.01.2019
+      * Purpose: EXEMPLO - USO DE ASSIGN COM VARIÁVEL LENDO ARQUIVO
       *----------------------------------------------------------------*
        IDENTIFICATION                  DIVISION.
       *----------------------------------------------------------------*
-       PROGRAM-ID.                     PR14TA01.
+       PROGRAM-ID.                     ARQUIVO.
       *----------------------------------------------------------------*
 
       *----------------------------------------------------------------*
@@ -19,20 +19,38 @@
            DECIMAL-POINT IS COMMA.
       *
       *----------------------------------------------------------------*
+       INPUT-OUTPUT                    SECTION.
+      *----------------------------------------------------------------*
+       FILE-CONTROL.
+           SELECT ARQUIVO-ENTRADA ASSIGN TO OPE01
+           ORGANIZATION IS LINE SEQUENTIAL.
+      *
+      *----------------------------------------------------------------*
        DATA                            DIVISION.
       *----------------------------------------------------------------*
       *
       *----------------------------------------------------------------*
+       FILE                            SECTION.
+      *----------------------------------------------------------------*
+       FD  ARQUIVO-ENTRADA.
+       01  DATA-RECORD.
+           03  GOODS-RECORD.
+               05  GOODS-CODE          PIC X(4).
+               05  FILLER              PIC X.
+               05  GOODS-NAME          PIC X(30).
+               05  FILLER              PIC X.
+               05  GOODS-PRICE         PIC 9(4).
+      *
+      *----------------------------------------------------------------*
        WORKING-STORAGE                 SECTION.
       *----------------------------------------------------------------*
-       77  NOME-PROGRAMA             PIC X(18) VALUE '*** PR14TA01 ***'.
-       77  VERSAO-PROGRAMA           PIC X(06) VALUE          'VRS001'.
+       77  NOME-PROGRAMA               PIC X(18) VALUE        'ARQUIVO'.
+       77  VERSAO-PROGRAMA             PIC X(06) VALUE         'VRS001'.
 
-       01  GRP-AUXILIARES.
-           03  OPE01                   PIC S9(05) COMP-5   VALUE ZEROS.
-           03  OPE02                   PIC S9(05) COMP-5   VALUE ZEROS.
-           03  OPE03                   PIC S9(05) COMP-5   VALUE ZEROS.
-           03  AUX01                   PIC S9(05) COMP-5   VALUE ZEROS.
+       01  VARIAVEIS-AUXILIARES.
+           03  OPE01                   PIC X(51)
+           VALUE "D:\Documentos\Cursos\COBOL\curso-cobol\DATAFILE.TXT".
+           03 AUX-1                    PIC S9(4) COMP-5 VALUE ZEROS.
 
       *----------------------------------------------------------------*
        PROCEDURE DIVISION.
@@ -51,32 +69,7 @@
       *----------------------------------------------------------------*
            DISPLAY NOME-PROGRAMA 'INICIA'
 
-           DISPLAY "VALOR DE OPE01" UPON CONSOLE.
-           ACCEPT   OPE01           FROM CONSOLE.
-
-           DISPLAY "VALOR DE OPE02" UPON CONSOLE.
-           ACCEPT   OPE02           FROM CONSOLE.
-
-           DISPLAY "VALOR DE OPE03" UPON CONSOLE.
-           ACCEPT   OPE03           FROM CONSOLE.
-
-           IF  OPE01 = 0
-               DISPLAY "OPE01 INVÁLIDO, INSERIR VALORES NOVAMENTE"
-               UPON CONSOLE
-               PERFORM INICIA
-           END-IF
-
-           IF  OPE02 = 0
-               DISPLAY "OPE02 INVÁLIDO, INSERIR VALORES NOVAMENTE"
-               UPON CONSOLE
-               PERFORM INICIA
-           END-IF
-
-           IF  OPE03 = 0
-               DISPLAY "OPE03 INVÁLIDO, INSERIR VALORES NOVAMENTE"
-               UPON CONSOLE
-               PERFORM INICIA
-           END-IF
+           OPEN INPUT ARQUIVO-ENTRADA
 
            .
 
@@ -85,24 +78,17 @@
       *----------------------------------------------------------------*
            PROCESSA                    SECTION.
       *----------------------------------------------------------------*
-           MOVE 0 TO AUX01
+           DISPLAY NOME-PROGRAMA 'PROCESSA'
 
-           IF  OPE01 > OPE02
-               MOVE OPE01 TO AUX01
-               MOVE OPE02 TO OPE01
-               MOVE AUX01 TO OPE02
-           END-IF
-
-           IF  OPE02 > OPE03
-               MOVE OPE02 TO AUX01
-               MOVE OPE03 TO OPE02
-               MOVE AUX01 TO OPE03
-           END-IF
-
-           IF  AUX01 NOT EQUAL 0
-               PERFORM PROCESSA
-           END-IF
-
+           PERFORM UNTIL AUX-1 = 1
+               READ ARQUIVO-ENTRADA
+               AT END MOVE 1 TO AUX-1
+               NOT AT END
+               DISPLAY "GOODS-CODE: " GOODS-CODE UPON CONSOLE
+               DISPLAY "GOODS-NAME: " GOODS-NAME UPON CONSOLE
+               DISPLAY "GOODS-PRICE: " GOODS-PRICE UPON CONSOLE
+               DISPLAY "###### " UPON CONSOLE
+           END-PERFORM
            .
 
            EXIT.
@@ -110,11 +96,9 @@
       *----------------------------------------------------------------*
            FINALIZA                    SECTION.
       *----------------------------------------------------------------*
-           DISPLAY "OPE01: " OPE01
-           DISPLAY "OPE02: " OPE02
-           DISPLAY "OPE03: " OPE03
-
            DISPLAY NOME-PROGRAMA 'FINALIZA'
+
+           CLOSE ARQUIVO-ENTRADA
 
            STOP RUN
 
