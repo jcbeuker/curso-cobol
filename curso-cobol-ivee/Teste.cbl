@@ -34,9 +34,6 @@
                                                         '*** TESTE ***'.
        77  CTE-VERS                    PIC X(06)           VALUE
                                                                'VRS001'.
-      * Constante com o nome da cidade
-       01  DF-BRASILIA                 PIC X(11)           VALUE
-                                                          'DF-BRASILIA'.
       *----------------------------------------------------------------*
        LOCAL-STORAGE                   SECTION.
       *----------------------------------------------------------------*
@@ -44,7 +41,7 @@
            03  VL-EXBR-1               PIC S9(07) COMP-5   VALUE ZEROS.
            03  VL-EXBR-2               PIC S9(07) COMP-5   VALUE ZEROS.
            03  WS-CNT1                 PIC S9(09) COMP-5   VALUE ZEROS.
-           03  CONTA-CARACTERES        PIC  X(30)          VALUE SPACES.
+           03  CONTA-CARACTERES        PIC  X(300)         VALUE SPACES.
 
        77  CTE-FINAL-SS                PIC X(40)           VALUE
                         '*** S. S. TERMINA AQUI ***'.
@@ -83,7 +80,9 @@
 
            DISPLAY CTE-PROG '200000-PROCESSA'
 
-           MOVE 'JOSE CAETANO BEUKER' TO CONTA-CARACTERES
+           DISPLAY "DIGITE UM TEXTO PARA CONTAR CARACTERES: "
+                                       UPON CONSOLE
+             ACCEPT   CONTA-CARACTERES FROM CONSOLE
 
            MOVE 0 TO WS-CNT1
            INSPECT CONTA-CARACTERES TALLYING WS-CNT1
