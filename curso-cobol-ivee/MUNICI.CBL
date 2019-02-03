@@ -1,8 +1,8 @@
       *----------------------------------------------------------------*
       * Author: JOSE CAETANO BEUKER
       * Date: 29.01.2019
-      * Purpose: Lê dados de municípios em txt e separa os de MG
-      *    em outro arquivo.
+      * Purpose: Lê dados de municípios em txt e separa os da UF
+      *    escolhida em outro arquivo.
       *----------------------------------------------------------------*
       * VERSAO 03 - Gravar os municípios de um estado escolhido
       *    em outro arquivo.
