@@ -4,6 +4,8 @@
       * Purpose: Lê dados de municípios em txt e separa os da UF
       *    escolhida em outro arquivo.
       *----------------------------------------------------------------*
+      * VERSAO 04 - Gravar os municípios de um estado escolhido ou do
+      *    Brasil todo.
       * VERSAO 03 - Gravar os municípios de um estado escolhido
       *    em outro arquivo.
       * VERSAO 02 - Gravar os municípios de MG em outro arquivo.
@@ -77,7 +79,7 @@
            03  CONTA-MUNIC-BRASIL      PIC S9(04) COMP-5    VALUE ZEROS.
            03  CONTA-MUNIC-UF          PIC S9(04) COMP-5    VALUE ZEROS.
            03  AUX-1                   PIC S9(09) COMP-5    VALUE ZEROS.
-           03  SG-UF-DESEJADA          PIC  X(02)           VALUE ' '.
+           03  SG-DESEJADA             PIC  X(02)           VALUE ' '.
 
       *----------------------------------------------------------------*
        PROCEDURE                       DIVISION.
@@ -96,15 +98,14 @@
       *----------------------------------------------------------------*
            DISPLAY NOME-PROGRAMA 'INICIA'
 
-           PERFORM UNTIL SG-UF-DESEJADA
-                                       NOT EQUAL SPACES
-             DISPLAY "DIGITE A SIGLA DA UF: "
+           PERFORM UNTIL SG-DESEJADA   NOT EQUAL SPACES
+             DISPLAY "DIGITE 'BR' ou a sigla de uma UF: "
                                        UPON CONSOLE
-             ACCEPT   SG-UF-DESEJADA  FROM CONSOLE
+             ACCEPT   SG-DESEJADA      FROM CONSOLE
            END-PERFORM
 
-           MOVE FUNCTION UPPER-CASE(SG-UF-DESEJADA)
-                                       TO SG-UF-DESEJADA
+           MOVE FUNCTION UPPER-CASE(SG-DESEJADA)
+                                       TO SG-DESEJADA
 
            INITIALIZE LS-MUN-BR
 
@@ -139,19 +140,39 @@
                NOT AT END
                ADD 1                   TO AUX-1
                IF  AUX-1               > 1
-                   ADD 1               TO CONTA-MUNIC-BRASIL
-                   IF  SG-UF-E         = SG-UF-DESEJADA
-                       ADD 1           TO CONTA-MUNIC-UF
-                       IF  CONTA-MUNIC-UF
+      *            Pesquisa os municípios de uma UF específica
+                   IF  SG-DESEJADA     NOT EQUAL 'BR'
+                       IF  SG-UF-E     = SG-DESEJADA
+                           ADD 1       TO CONTA-MUNIC-UF
+                           IF  CONTA-MUNIC-UF
                                        = 1
+                               PERFORM GRAVA-CABECALHO
+                           END-IF
+                           MOVE CONTA-MUNIC-UF
+                                       TO NR-SEQL-MUN-ESCOLHIDA
+                           MOVE CD-MUN-E-R
+                                       TO CD-MUN-ESCOLHIDA
+                           MOVE NM-MUN-E
+                                       TO NM-MUN-ESCOLHIDA
+                           MOVE SG-UF-E
+                                       TO SG-UF-ESCOLHIDA
+                           PERFORM GRAVA-ARQUIVO-S
+                       END-IF
+      *            Pesquisa os municípios do Brasil todo
+                   ELSE
+                       ADD 1           TO CONTA-MUNIC-BRASIL
+                       IF  CONTA-MUNIC-BRASIL = 1
                            PERFORM GRAVA-CABECALHO
                        END-IF
-                       MOVE CONTA-MUNIC-UF
+                           MOVE CONTA-MUNIC-BRASIL
                                        TO NR-SEQL-MUN-ESCOLHIDA
-                       MOVE CD-MUN-E-R TO CD-MUN-ESCOLHIDA
-                       MOVE NM-MUN-E   TO NM-MUN-ESCOLHIDA
-                       MOVE SG-UF-E    TO SG-UF-ESCOLHIDA
-                       PERFORM GRAVA-ARQUIVO-S
+                           MOVE CD-MUN-E-R
+                                       TO CD-MUN-ESCOLHIDA
+                           MOVE NM-MUN-E
+                                       TO NM-MUN-ESCOLHIDA
+                           MOVE SG-UF-E
+                                       TO SG-UF-ESCOLHIDA
+                           PERFORM GRAVA-ARQUIVO-S
                    END-IF
                END-IF
            END-PERFORM
@@ -191,33 +212,31 @@
       *----------------------------------------------------------------*
            DISPLAY NOME-PROGRAMA 'GRAVA-RODAPE'
 
-           MOVE 0                      TO NR-SEQL-MUN-ESCOLHIDA
-           MOVE 0                      TO CD-MUN-ESCOLHIDA
-           MOVE "QT-MUN-BR"            TO NM-MUN-ESCOLHIDA
-           MOVE "##"                   TO SG-UF-ESCOLHIDA
+           IF  CONTA-MUNIC-BRASIL      > 0
+               MOVE 0                  TO NR-SEQL-MUN-ESCOLHIDA
+               MOVE 0                  TO CD-MUN-ESCOLHIDA
+               MOVE "QT-MUN-BR"        TO NM-MUN-ESCOLHIDA
+               MOVE "##"               TO SG-UF-ESCOLHIDA
+               PERFORM GRAVA-ARQUIVO-S
+               MOVE 0                  TO NR-SEQL-MUN-ESCOLHIDA
+               MOVE 0                  TO CD-MUN-ESCOLHIDA
+               MOVE CONTA-MUNIC-BRASIL TO NM-MUN-ESCOLHIDA
+               MOVE "##"               TO SG-UF-ESCOLHIDA
+               PERFORM GRAVA-ARQUIVO-S
+           END-IF
 
-           PERFORM GRAVA-ARQUIVO-S
-
-           MOVE 0                      TO NR-SEQL-MUN-ESCOLHIDA
-           MOVE 0                      TO CD-MUN-ESCOLHIDA
-           MOVE CONTA-MUNIC-BRASIL     TO NM-MUN-ESCOLHIDA
-           MOVE "##"                   TO SG-UF-ESCOLHIDA
-
-           PERFORM GRAVA-ARQUIVO-S
-
-           MOVE 0                      TO NR-SEQL-MUN-ESCOLHIDA
-           MOVE 0                      TO CD-MUN-ESCOLHIDA
-           MOVE "QT-MUN-UF"            TO NM-MUN-ESCOLHIDA
-           MOVE "##"                   TO SG-UF-ESCOLHIDA
-
-           PERFORM GRAVA-ARQUIVO-S
-
-           MOVE 0                      TO NR-SEQL-MUN-ESCOLHIDA
-           MOVE 0                      TO CD-MUN-ESCOLHIDA
-           MOVE CONTA-MUNIC-UF         TO NM-MUN-ESCOLHIDA
-           MOVE "##"                   TO SG-UF-ESCOLHIDA
-
-           PERFORM GRAVA-ARQUIVO-S
+           IF  CONTA-MUNIC-UF          > 0
+               MOVE 0                  TO NR-SEQL-MUN-ESCOLHIDA
+               MOVE 0                  TO CD-MUN-ESCOLHIDA
+               MOVE "QT-MUN-UF"        TO NM-MUN-ESCOLHIDA
+               MOVE "##"               TO SG-UF-ESCOLHIDA
+               PERFORM GRAVA-ARQUIVO-S
+               MOVE 0                  TO NR-SEQL-MUN-ESCOLHIDA
+               MOVE 0                  TO CD-MUN-ESCOLHIDA
+               MOVE CONTA-MUNIC-UF     TO NM-MUN-ESCOLHIDA
+               MOVE "##"               TO SG-UF-ESCOLHIDA
+               PERFORM GRAVA-ARQUIVO-S
+           END-IF
 
            .
 
