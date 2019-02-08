@@ -4,6 +4,7 @@
       * Purpose: Lê dados de municípios em txt e separa os da UF
       *    escolhida em outro arquivo.
       *----------------------------------------------------------------*
+      * VERSAO 05 - Gravar data e hora da execução no arquivo de saída.
       * VERSAO 04 - Gravar os municípios de um estado escolhido ou do
       *    Brasil todo.
       * VERSAO 03 - Gravar os municípios de um estado escolhido
@@ -72,6 +73,22 @@
        77  VERSAO-PROGRAMA             PIC X(06) VALUE         'VRS002'.
 
        01  VARIAVEIS-AUXILIARES.
+           03  DATA-ATUAL              PIC 9(06)            VALUE ZEROS.
+           03  DATA-ATUAL-RED.
+               05  DIA-ATUAL           PIC X(02)            VALUE ' '.
+               05  FILLER              PIC X(01)            VALUE '/'.
+               05  MES-ATUAL           PIC X(02)            VALUE ' '.
+               05  FILLER              PIC X(01)            VALUE '/'.
+               05  ANO-ATUAL           PIC X(04)            VALUE ' '.
+           03  HORA-ATUAL              PIC 9(08)            VALUE ZEROS.
+           03  HORA-ATUAL-RED.
+               05  HORA-ATUAL-R        PIC X(02)            VALUE ' '.
+               05  FILLER              PIC X(01)            VALUE ':'.
+               05  MIN-ATUAL-R         PIC X(02)            VALUE ' '.
+               05  FILLER              PIC X(01)            VALUE ':'.
+               05  SEG-ATUAL-R         PIC X(02)            VALUE ' '.
+               05  FILLER              PIC X(01)            VALUE ':'.
+               05  DEC-ATUAL-R         PIC X(02)            VALUE ' '.
            03  OPE01                   PIC X(59)            VALUE ' '.
            03  OPE02                   PIC X(56)            VALUE ' '.
            03  IND-FIM-ARQUIVO         PIC X(01)            VALUE 'N'.
@@ -237,6 +254,28 @@
                MOVE "##"               TO SG-UF-ESCOLHIDA
                PERFORM GRAVA-ARQUIVO-S
            END-IF
+
+           ACCEPT DATA-ATUAL FROM DATE
+           ACCEPT HORA-ATUAL FROM TIME
+
+           MOVE DATA-ATUAL(5:2)        TO DIA-ATUAL
+           MOVE DATA-ATUAL(3:2)        TO MES-ATUAL
+           STRING
+             '20' DATA-ATUAL(1:2)
+             DELIMITED BY SIZE INTO ANO-ATUAL
+
+           MOVE HORA-ATUAL(1:2)        TO HORA-ATUAL-R
+           MOVE HORA-ATUAL(3:2)        TO MIN-ATUAL-R
+           MOVE HORA-ATUAL(5:2)        TO SEG-ATUAL-R
+           MOVE HORA-ATUAL(7:2)        TO DEC-ATUAL-R
+
+           MOVE 0                      TO NR-SEQL-MUN-ESCOLHIDA
+           MOVE 0                      TO CD-MUN-ESCOLHIDA
+           STRING
+             'DATA-HORA: ' DATA-ATUAL-RED ';'HORA-ATUAL-RED
+             DELIMITED BY SIZE INTO NM-MUN-ESCOLHIDA
+           MOVE "##"                   TO SG-UF-ESCOLHIDA
+           PERFORM GRAVA-ARQUIVO-S
 
            .
 
