@@ -70,7 +70,7 @@
        WORKING-STORAGE                 SECTION.
       *----------------------------------------------------------------*
        77  NOME-PROGRAMA               PIC X(18) VALUE   '** MUNICI **'.
-       77  VERSAO-PROGRAMA             PIC X(06) VALUE         'VRS002'.
+       77  VERSAO-PROGRAMA             PIC X(06) VALUE         'VRS005'.
 
        01  VARIAVEIS-AUXILIARES.
            03  DATA-ATUAL              PIC 9(06)            VALUE ZEROS.
